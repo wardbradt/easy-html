@@ -19,8 +19,8 @@ start_time = time.time()
 
 bowl = PrettyBowl(markup)
 
-for i in (range(1000)):
-    str(bowl)
+for i in range(1000):
+    bowl = PrettyBowl(markup)
 
 print("Pretty took %f seconds" % (time.time() - start_time))
 
@@ -30,7 +30,7 @@ start_time = time.time()
 
 bowl = BeautifulSoup(markup, 'html.parser')
 
-for i in (range(1000)):
-    str(bowl)
+for i in range(1000):
+    bowl = BeautifulSoup(markup, 'html.parser')
 
 print("Beautiful took %f seconds" % (time.time() - start_time))
