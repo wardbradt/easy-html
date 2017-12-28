@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import time
-from ps1.easyHTML.PrettyBowl import PrettyBowl
+from PrettyBowl import PrettyBowl
 
 markup = """
 <body>

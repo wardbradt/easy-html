@@ -70,6 +70,11 @@ class PageElement:
         self.previous_sibling = self.next_sibling = None
         return self
 
+    def wrap(self, wrapper):
+        me = self.replace_with(wrapper)
+        wrapper.append(me)
+        return wrapper
+
     # abstract method - implement in child
     def _last_descendant(self, is_initialized=True, accept_self=True):
         return self
@@ -94,7 +99,8 @@ class PageElement:
         parent.insert(index, predecessor)
 
     def insert_after(self, successor):
-        """Makes the given element the immediate successor of this one.
+        """
+        Makes the given element the immediate successor of this one.
 
         The two elements will have the same parent, and the given element
         will be immediately after this one.
@@ -110,6 +116,6 @@ class PageElement:
         if isinstance(successor, PageElement):
             successor.extract()
         index = parent.index(self)
-        parent.insert(index+1, successor)
+        parent.insert(index + 1, successor)
 
     # find methods (using name, attrs, and text) go here. They were deleted b/c they are unnecessary.

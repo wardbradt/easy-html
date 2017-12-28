@@ -23,7 +23,7 @@ class Tag(PageElement):
 
         position = min(position, len(self.contents))
         if hasattr(new_child, 'parent') and new_child.parent is not None:
-            # We're 'inserting' an element that's already one
+            # If we're 'inserting' an element that's already one
             # of this object's children.
             if new_child.parent is self:
                 current_index = self.index(new_child)
@@ -76,7 +76,7 @@ class Tag(PageElement):
         if new_child_last_element.next_element is not None:
             new_child_last_element.next_element.previous_element = new_child_last_element
         self.contents.insert(position, new_child)
-
+    
     def _last_descendant(self, is_initialized=True, accept_self=True):
         """Finds the last element beneath this object to be parsed."""
         if is_initialized and self.next_sibling:
