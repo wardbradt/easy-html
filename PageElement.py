@@ -1,18 +1,10 @@
 class PageElement:
 
     # taken from BS4's setup method
-    def __init__(self, parent=None, previous_element=None, next_element=None, previous_sibling=None, next_sibling=None):
+    def __init__(self, parent=None, previous_sibling=None, next_sibling=None):
         """Sets up the initial relations between this element and
         other elements."""
         self.parent = parent
-
-        self.previous_element = previous_element
-        if previous_element is not None:
-            self.previous_element.next_element = self
-
-        self.next_element = next_element
-        if self.next_element:
-            self.next_element.previous_element = self
 
         self.next_sibling = next_sibling
         if self.next_sibling:
@@ -39,45 +31,48 @@ class PageElement:
         old_parent.insert(my_index, replacement)
         return self
 
-    def wrap(self, wrapper_tag):
-        me = self.replace_with(wrapper_tag)
-        wrapper_tag.append(me)
-        return wrapper_tag
-
     def extract(self):
         """Destructively rips this element out of the tree."""
         if self.parent is not None:
             del self.parent.contents[self.parent.index(self)]
 
-        # Find the two elements that would be next to each other if this element (and any children) hadn't been parsed.
-        # Connect the two.
-        last_child = self._last_descendant()
-        next_element = last_child.next_element
+        self.parent = None
 
-        # todo: what is the second part of this conditional checking?
-        if self.previous_element is not None and self.previous_element is not next_element:
-            self.previous_element.next_element = next_element
-        if next_element is not None and next_element is not self.previous_element:
-            next_element.previous_element = self.previous_element
-        self.previous_element = None
-        last_child.next_element = None
+        if self.previous_sibling is not None:
+            self.previous_sibling.next_sibling = self.next_sibling
+
+        if self.next_sibling is not None:
+            self.next_sibling.previous_sibling = self.previous_sibling
+
+        self.previous_sibling = self.next_sibling = None
+
+        return self
+
+    def _extract(self, self_index):
+        """
+        This is a method which decreases runtime if the index of self in parent.contents is already known.
+        For Tag's insert method but may have other uses.
+        Extracts self from the tree.
+        :param self_index: should be equal to self.parent.index(self)
+        """
+        del self.parent.contents[self_index]
 
         self.parent = None
-        if self.previous_sibling is not None and self.previous_sibling is not self.next_sibling:
+
+        if self.previous_sibling is not None:
             self.previous_sibling.next_sibling = self.next_sibling
-        if self.next_sibling is not None and self.next_sibling is not self.previous_sibling:
+
+        if self.next_sibling is not None:
             self.next_sibling.previous_sibling = self.previous_sibling
+
         self.previous_sibling = self.next_sibling = None
+
         return self
 
     def wrap(self, wrapper):
         me = self.replace_with(wrapper)
         wrapper.append(me)
         return wrapper
-
-    # abstract method - implement in child
-    def _last_descendant(self, is_initialized=True, accept_self=True):
-        return self
 
     def insert_before(self, predecessor):
         """Makes the given element the immediate predecessor of this one.
