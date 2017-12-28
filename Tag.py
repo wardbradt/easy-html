@@ -1,5 +1,5 @@
-from ps1.easyHTML.PageElement import PageElement
-from ps1.easyHTML.NavigableString import NavigableString
+from PageElement import PageElement
+from NavigableString import NavigableString
 
 EMPTY_ELEMENTS = ["area", "input", "textarea"]
 

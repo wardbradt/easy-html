@@ -1,6 +1,6 @@
 from html.parser import HTMLParser
-from ps1.easyHTML.Tag import Tag
-from ps1.easyHTML.NavigableString import NavigableString
+from Tag import Tag
+from NavigableString import NavigableString
 from collections import deque
 
 

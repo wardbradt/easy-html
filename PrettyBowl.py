@@ -1,5 +1,5 @@
-from ps1.easyHTML.Tag import Tag
-from ps1.easyHTML.PrettyParser import PrettyParser
+from Tag import Tag
+from PrettyParser import PrettyParser
 
 
 class PrettyBowl(Tag):

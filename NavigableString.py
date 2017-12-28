@@ -1,4 +1,4 @@
-from ps1.easyHTML.PageElement import PageElement
+from PageElement import PageElement
 
 
 class NavigableString(str, PageElement):
