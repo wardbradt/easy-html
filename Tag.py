@@ -9,7 +9,7 @@ class Tag(PageElement):
         PageElement.__init__(self, parent, previous_sibling)
         self.name = name
         if attrs is None:
-            attrs = {}
+            attrs = []
         self.attrs = attrs
         self.contents = []
 

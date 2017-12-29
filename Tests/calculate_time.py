@@ -1,7 +1,7 @@
 import time
 
 
-def calculate_time(f, *args, loops=10):
+def calculate_time(f, *args, loops=200):
     result = 0
     for i in range(0, loops):
         start_time = time.time()
