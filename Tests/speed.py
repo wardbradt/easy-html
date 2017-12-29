@@ -12,15 +12,17 @@ markup = """
     """
 
 
-def test_parse():
+def test_pretty():
     p = PrettyParser()
-    print(p.feed(markup))
+    p.feed(markup)
+
+# def test_beautiful():
 
 
 time = 0
 range_loops = 10
 for i in range(range_loops):
-    time += calculate_time(test_parse)
+    time += calculate_time(test_pretty)
 
 time /= range_loops
 with open('speed.txt', 'a') as f:

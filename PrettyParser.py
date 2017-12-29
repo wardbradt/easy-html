@@ -35,12 +35,20 @@ class PrettyParser(HTMLParser):
         # contents is equal to the elements at the beginning whose parent is self.iterating_deque[-1]
 
         # the tag we instantiated when parsing this endtag's corresponding starttag
-        tag_to_be_closed = self.iterating_deque.pop()
-        print(len(self.iterating_deque))
-        while self.iterating_deque[0].parent is tag_to_be_closed:
-            tag_to_be_closed.contents.insert(0, self.iterating_deque.popleft())
+        popped_tag_to_be_closed = self.iterating_deque[-1]
 
-        self.iterating_deque.appendleft(tag_to_be_closed)
+        while self.iterating_deque[0].parent is popped_tag_to_be_closed:
+            popped_tag_to_be_closed.contents.insert(0, self.iterating_deque.popleft())
+
+        # if the first element in self.iterating_deque is the previous sibling of popped_tag_to_be_closed
+        if self.iterating_deque[0].parent is popped_tag_to_be_closed.parent \
+                and self.iterating_deque[0] is not popped_tag_to_be_closed:
+            self.iterating_deque[0].next_sibling = popped_tag_to_be_closed
+            popped_tag_to_be_closed.previous_sibling = self.iterating_deque[0]
+
+        self.iterating_deque.pop()
+
+        self.iterating_deque.appendleft(popped_tag_to_be_closed)
 
     def handle_data(self, data):
         # if this string is not the child of a pre or textarea tag
@@ -51,12 +59,19 @@ class PrettyParser(HTMLParser):
                 return
         new_string = NavigableString(data)
         new_string.parent = self.iterating_deque[-1]
+        if self.iterating_deque[0].parent is new_string.parent:
+            self.iterating_deque[0].next_sibling = new_string
+            new_string.previous_sibling = self.iterating_deque[0]
 
         self.iterating_deque.appendleft(new_string)
 
     def handle_startendtag(self, tag, attrs):
         new_tag = Tag(tag, attrs)
         new_tag.parent = self.iterating_deque[-1]
+        
+        if self.iterating_deque[0].parent is new_tag.parent:
+            self.iterating_deque[0].next_sibling = new_tag
+            new_tag.previous_sibling = self.iterating_deque[0]
 
         self.iterating_deque.appendleft(new_tag)
 
