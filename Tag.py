@@ -5,13 +5,15 @@ EMPTY_ELEMENTS = ["area", "input", "textarea"]
 
 
 class Tag(PageElement):
-    def __init__(self, name,  attrs=None, parent=None, previous_sibling=None):
+    def __init__(self, name,  attrs=None, contents=None, parent=None, previous_sibling=None):
         PageElement.__init__(self, parent, previous_sibling)
         self.name = name
         if attrs is None:
             attrs = []
+        if contents is None:
+            contents = []
         self.attrs = attrs
-        self.contents = []
+        self.contents = contents
 
     def index(self, element):
         """
