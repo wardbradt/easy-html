@@ -77,7 +77,7 @@ class PrettyParser(HTMLParser):
 
     def feed(self, data):
         super().feed(data + "\n</document_root>")
-        return self.iterating_deque[-1]
+        return self.iterating_deque.pop()
 
     def error(self, message):
         pass
