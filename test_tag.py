@@ -29,10 +29,10 @@ class TestTag(TestCase):
         tag = Tag("div")
         p = Tag("p")
         p.string = "Hello world"
-        tag._append_f(p)
+        tag._append(p)
         p_two = Tag("p")
         p_two.string = "Hello world"
-        tag._append_f(p_two)
+        tag._append(p_two)
 
         self.assertEqual(tag.contents[0], p)
         self.assertEqual(tag.contents[1], p_two)
