@@ -4,6 +4,15 @@ from NavigableString import NavigableString
 from collections import deque
 
 
+def _get_attrs_dict(attrs):
+    # handle the formatting of attrs
+    attrs_dict = {}
+    for i in attrs:
+        # if i == ('class', 'foo bar'), attrs_dict['class'] = ['foo', 'bar']
+        attrs_dict[i[0]] = i[1].split()
+    return attrs_dict
+
+
 class PrettyParser(HTMLParser):
 
     def __init__(self):
@@ -23,7 +32,9 @@ class PrettyParser(HTMLParser):
         if tag in {'pre', 'textarea'}:
             self.whitespace_count += 1
 
-        new_tag = Tag(tag, attrs)
+        attrs_dict = _get_attrs_dict(attrs)
+
+        new_tag = Tag(tag, attrs_dict)
         new_tag.parent = self.iterating_deque[-1]
 
         self.iterating_deque.append(new_tag)
@@ -66,7 +77,9 @@ class PrettyParser(HTMLParser):
         self.iterating_deque.appendleft(new_string)
 
     def handle_startendtag(self, tag, attrs):
-        new_tag = Tag(tag, attrs)
+        attrs_dict = _get_attrs_dict(attrs)
+
+        new_tag = Tag(tag, attrs_dict)
         new_tag.parent = self.iterating_deque[-1]
         
         if self.iterating_deque[0].parent is new_tag.parent:
