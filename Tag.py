@@ -9,7 +9,7 @@ class Tag(PageElement):
         PageElement.__init__(self, parent, previous_sibling)
         self.name = name
         if attrs is None:
-            attrs = []
+            attrs = {}
         if contents is None:
             contents = []
         self.attrs = attrs
@@ -174,10 +174,14 @@ class Tag(PageElement):
         return iter(self.contents)
 
     def decode(self, indent_level=None):
-        attrs = []
-        if self.attrs:
-            for i in attrs:
-                attrs.append(i[0] + '=' + i[1])
+        attribute_string = ' '
+        for attribute, values in self.attrs.items():
+            value_string = ''
+            for i in values:
+                value_string += i + ' '
+            attribute_string += attribute + '=' + value_string
+
+        attribute_string = attribute_string[:-1]
 
         close = ''
         close_tag = ''
@@ -195,9 +199,6 @@ class Tag(PageElement):
             contents = self.decode_contents()
 
         result_string = ''
-        attribute_string = ''
-        if attrs:
-            attribute_string = ' ' + ' '.join(attrs)
         if indent_level is not None:
             indent_space = ' ' * (indent_level - 1)
             result_string += indent_space
@@ -217,3 +218,13 @@ class Tag(PageElement):
 
     def __str__(self):
         return self.decode()
+
+    @property
+    def descendants(self):
+        """
+        A generator for iterating over this Tag's children. Only yields children which are Tags (no NavigableStrings)
+        """
+        for child in self.contents:
+            if isinstance(child, Tag):
+                yield child
+                yield from child.descendants
